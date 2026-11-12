@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:18
+    container_name: product-inventory-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: inventory_user
+      POSTGRES_PASSWORD: inventory_password
+      POSTGRES_DB: product_inventory
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    volumes:
+      - inventory_data:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory_user -d product_inventory"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  inventory_data:
